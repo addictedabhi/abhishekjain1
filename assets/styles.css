@@ -442,3 +442,46 @@ body.menu-open { overflow: hidden; }
 }
 
 .btn svg { margin-right: 8px; }
+
+/* ----- Resource cards (Resources page) ----- */
+.resource-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 800px) {
+  .resource-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; }
+}
+
+.resource {
+  background: var(--surface-card);
+  color: var(--ink);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+@media (min-width: 800px) { .resource { padding: 32px; gap: 20px; } }
+
+.resource__head { display: flex; flex-direction: column; gap: 12px; }
+.resource__type { align-self: flex-start; }
+.resource__title { margin: 0; color: var(--ink); }
+.resource__desc { color: var(--body); margin: 0; max-width: 56ch; }
+
+.resource__meta {
+  display: flex; flex-wrap: wrap; gap: 20px 28px;
+  margin: 0; padding: 16px 0 0;
+  border-top: 1px solid var(--hairline);
+}
+.resource__meta > div { display: flex; flex-direction: column; gap: 4px; }
+.resource__meta dt { color: var(--muted); margin: 0; }
+.resource__meta dd { color: var(--ink); margin: 0; font-weight: 500; }
+
+.resource__cta {
+  align-self: stretch;
+  margin-top: 4px;
+  gap: 8px;
+}
+@media (min-width: 800px) { .resource__cta { align-self: flex-start; } }
+.resource__cta svg { width: 16px; height: 16px; }
