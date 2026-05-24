@@ -43,6 +43,14 @@ IntersectionObserver in `script.js` picks the entry with the greatest `intersect
 
 `DESIGN.md` (repo root) defines the Anthropic-style warm-cream + coral + dark-navy editorial system: full token table, component specs, typography rules, do/don't list. When adding or editing a component, reference the token name (e.g., `var(--surface-card)`), never inline a hex value.
 
+### Client tile brand monograms
+
+`#clients` tiles use text-based brand monograms (not real corporate logos) inside a 44×44 rounded badge above the client name + region. One CSS modifier class per brand (e.g., `.tile__logo--stc`, `.tile__logo--jio`, `.tile__logo--google`) — brand colors live in those modifier classes, not in inline styles or HTML. Google uses a gradient-clipped multicolor "G" treatment as a one-off. Adding a new client means: add a new `<li class="tile">` block in `index.html` and a matching `.tile__logo--<slug>` rule in `styles.css`. Keep monograms text-based to stay clear of trademark concerns unless real SVG logos are explicitly approved. Tiles grid breakpoints are tuned for 11 entries (2 / 3 / 4 / 6 columns at 0 / 700 / 1024 / 1280 px).
+
+### Favicon
+
+`assets/favicon.svg` is an "AJ" serif monogram (cream text on coral square). It is intentionally distinct from the nav/footer spike-mark wordmark — the spike-mark is the inline-brand glyph, the AJ monogram is the browser-tab signature. Replacing one does not imply replacing the other.
+
 ## Conventions
 
 - All section IDs are lowercase nouns (`#about`, `#expertise`, `#experience`, `#clients`, `#skills`, `#contact`). Nav links, footer links, mobile menu, and `BreadcrumbList` JSON-LD must stay in sync if you add or rename one.
