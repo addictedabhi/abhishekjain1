@@ -39,8 +39,9 @@ Coral primary unchanged across themes (brand voltage).
 ### Theme switching
 
 - `<html data-theme="light|dark">` attribute, CSS variables swap.
-- First load: read `localStorage.theme`, else `prefers-color-scheme`.
-- Toggle button in top nav (sun/moon SVG icon).
+- **Default theme: dark.** First load: read `localStorage.theme` if set, else apply `dark`. `prefers-color-scheme` is NOT consulted (intentional — keeps the brand's dark surface as the entry experience).
+- Toggle button in top nav (sun/moon SVG icon). User choice persists in `localStorage`.
+- No OS-level theme-change listener — once a user toggles, that choice is sticky across reloads regardless of OS theme.
 - Update is instant; no transition flash (set `data-theme` inline pre-CSS via tiny inline script in `<head>`).
 
 ## 3. Page Structure
@@ -116,8 +117,8 @@ Single `index.html`. Sections anchored by ID. Navigation + inline links scroll-j
   - **AI / LLM:** Claude Code, GitHub Copilot, LLM-assisted dev, Prompt Engineering, AI workflow automation
   - **Cloud & Infra:** Kubernetes, Docker, AWS, Azure, Terraform, Helm, CI/CD, Microservices
   - **AIOps & Observability:** Grafana, Telegraf, Prometheus, ML anomaly detection
-  - **IoT & Connectivity:** CMP, OTA, MQTT, CoAP, edge computing, vehicle telemetry
-  - **Languages:** Python, Go, JavaScript / Node.js, Java, SQL / NoSQL
+  - **Languages:** Python, JavaScript / Node.js, Java, SQL / NoSQL
+  - **Leadership:** Remote-first org design, 0→1 team building, M&A, Async culture, OKR planning
 - Group label: caption-uppercase muted; pills inline-wrap.
 
 ### 3.7 Contact (`#contact`)

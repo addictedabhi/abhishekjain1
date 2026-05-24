@@ -26,6 +26,8 @@
 | CLAUDE.md | ✅ Done | `0841aba`, `66ed616` | Initial + monogram/favicon addendum |
 | Client tiles expanded (6 → 11) | ✅ Done | `0164724` | Added Etisalat, Maxis, Google, Eicher, Volvo Trucks; brand monogram system |
 | Favicon "AJ" monogram | ✅ Done | `9913718` | Replaced spike-mark favicon with serif "AJ" on coral |
+| Skills trim | ✅ Done | `6e0aa22` | Dropped IoT & Connectivity group; removed Go from Languages |
+| Default theme → dark | ✅ Done | `391fcb6` | `<html data-theme="dark">`, pre-paint default = dark, OS-pref change listener removed |
 | Task 14 (Lighthouse) | ⏳ User-driven | — | Requires browser/DevTools |
 | Task 15 (Pages publish) | ⏳ User-driven | — | Requires GitHub UI |
 | Task 16 (OG cover image) | ⏳ Open | — | `assets/og-cover.png` referenced in meta but not yet generated |
@@ -279,15 +281,14 @@ Overwrite `<head>` block:
   <meta property="og:url" content="https://abhishekjain1.github.io/abhishekjain1/">
   <meta name="twitter:card" content="summary">
 
-  <!-- Pre-paint theme (prevent FOUC) -->
+  <!-- Pre-paint theme (prevent FOUC). Default = dark; no OS-pref consultation. -->
   <script>
     (function () {
       try {
         var stored = localStorage.getItem('theme');
-        var prefers = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', stored || prefers);
+        document.documentElement.setAttribute('data-theme', stored || 'dark');
       } catch (e) {
-        document.documentElement.setAttribute('data-theme', 'light');
+        document.documentElement.setAttribute('data-theme', 'dark');
       }
     })();
   </script>
@@ -949,12 +950,8 @@ git commit -m "feat(clients): add global client footprint with brand monograms"
         <dd><span class="pill">Grafana</span><span class="pill">Telegraf</span><span class="pill">Prometheus</span><span class="pill">ML anomaly detection</span></dd>
       </div>
       <div class="skills__group">
-        <dt class="caption-up">IoT &amp; Connectivity</dt>
-        <dd><span class="pill">CMP</span><span class="pill">OTA</span><span class="pill">MQTT</span><span class="pill">CoAP</span><span class="pill">Edge computing</span><span class="pill">Vehicle telemetry</span></dd>
-      </div>
-      <div class="skills__group">
         <dt class="caption-up">Languages</dt>
-        <dd><span class="pill">Python</span><span class="pill">Go</span><span class="pill">JavaScript / Node.js</span><span class="pill">Java</span><span class="pill">SQL / NoSQL</span></dd>
+        <dd><span class="pill">Python</span><span class="pill">JavaScript / Node.js</span><span class="pill">Java</span><span class="pill">SQL / NoSQL</span></dd>
       </div>
       <div class="skills__group">
         <dt class="caption-up">Leadership</dt>
@@ -1246,15 +1243,7 @@ Overwrite `assets/script.js`:
     });
   }
 
-  // React to OS-level theme changes when the user hasn't picked one.
-  if (window.matchMedia) {
-    const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    mq.addEventListener && mq.addEventListener('change', function (e) {
-      let stored = null;
-      try { stored = localStorage.getItem('theme'); } catch (err) {}
-      if (!stored) applyTheme(e.matches ? 'dark' : 'light');
-    });
-  }
+  // Default theme is dark; do not auto-flip on OS color-scheme change.
 })();
 ```
 
