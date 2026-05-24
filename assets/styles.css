@@ -314,3 +314,16 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; col
   padding: 6px 12px; border-radius: 9999px;
   font-size: 13px; font-weight: 500;
 }
+
+/* ----- Contact callout ----- */
+.callout {
+  background: var(--primary); color: var(--on-primary);
+  border-radius: 16px; padding: 56px 32px;
+  text-align: left;
+}
+@media (min-width: 800px) { .callout { padding: 72px 64px; } }
+.callout > * + * { margin-top: 24px; }
+.callout__title { color: var(--on-primary); margin-top: 16px; }
+.callout__sub { color: var(--on-primary); opacity: .92; max-width: 56ch; }
+.callout__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.callout .badge--coral { background: rgba(255,255,255,.18); color: var(--on-primary); }
