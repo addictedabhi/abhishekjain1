@@ -12,15 +12,38 @@
 
 ---
 
+## Execution Log
+
+| Phase | Status | Commit range | Notes |
+|---|---|---|---|
+| Tasks 1–13 (build) | ✅ Done | `d1e0b4d` → `6d852ba` | Implemented by subagent, single dispatch |
+| Spec compliance review | ✅ Done | — | 1 bug (section DOM order) + 4 drifts found |
+| Spec fixes | ✅ Done | `40601b4` | Section order restored, headings → spec literals; Skills nav link + Leadership skills group accepted as intentional extras |
+| Code quality review | ✅ Done | — | 2 critical + 4 important + 5 minor findings |
+| Quality fixes | ✅ Done | `4fdaa22` | Skip link → `#main`, JS rewrapped in single IIFE w/ focus trap, hex values tokenized, JSON-LD email cleaned, footer breakpoint normalized |
+| README | ✅ Done | `2fbc57f` | — |
+| SEO pack | ✅ Done | `b77d034` | Title/desc/keywords, OG, Twitter, 3 JSON-LD blocks (Person/WebSite/BreadcrumbList), `robots.txt`, `sitemap.xml` |
+| CLAUDE.md | ✅ Done | (pending commit) | — |
+| Task 14 (Lighthouse) | ⏳ User-driven | — | Requires browser/DevTools |
+| Task 15 (Pages publish) | ⏳ User-driven | — | Requires GitHub UI |
+| Task 16 (OG cover image) | ⏳ Open | — | `assets/og-cover.png` referenced in meta but not yet generated |
+
+---
+
 ## File Structure
 
-| File | Responsibility |
-|---|---|
-| `index.html` | Document structure, semantic landmarks, all section markup, inline pre-paint theme script, JSON-LD schema, meta tags |
-| `assets/styles.css` | Theme tokens (light + dark), typography scale, layout grid, every component style |
-| `assets/script.js` | Theme toggle, smooth scroll, active-nav observer, mobile menu, fade-in observer |
-| `assets/favicon.svg` | Spike-mark glyph favicon |
-| `.nojekyll` | Disable GitHub Pages Jekyll processing |
+| File | Responsibility | Status |
+|---|---|---|
+| `index.html` | Document structure, semantic landmarks, all section markup, inline pre-paint theme script, JSON-LD graph, meta tags, OG/Twitter cards | ✅ |
+| `assets/styles.css` | Theme tokens (light + dark), typography scale, layout grid, every component style | ✅ |
+| `assets/script.js` | Single IIFE: theme toggle, mobile menu (w/ focus trap), smooth scroll, active-nav observer, fade-in observer | ✅ |
+| `assets/favicon.svg` | Spike-mark glyph favicon | ✅ |
+| `assets/og-cover.png` | 1200×630 social-preview image (referenced in OG + Twitter meta) | ⏳ Missing |
+| `.nojekyll` | Disable GitHub Pages Jekyll processing | ✅ |
+| `robots.txt` | Crawl directives + sitemap pointer | ✅ |
+| `sitemap.xml` | XML sitemap (single canonical URL) | ✅ |
+| `README.md` | Project README for GitHub repo landing | ✅ |
+| `CLAUDE.md` | Guidance for future Claude Code sessions | ✅ |
 
 Verification = open `index.html` in a browser. No test framework (static site, no logic worth unit-testing). Each task ends with a manual browser-verify step + git commit.
 
@@ -1423,27 +1446,77 @@ git push
 
 ---
 
-## Self-Review Notes
+## Task 16: Generate Open Graph cover image
 
-- Spec § 3 (sections): all 7 anchors covered (Tasks 4-11).
-- Spec § 2 (theme tokens, fonts): Task 2 + Task 3.
-- Spec § 4 (interactivity): Task 12 (theme) + Task 13 (scroll/menu/observer).
-- Spec § 5 (file layout): Task 1 creates exactly the files listed.
-- Spec § 6 (a11y): Task 14 covers manual + Lighthouse pass; skip-link in Task 4; reduced-motion in Tasks 2, 13.
-- Spec § 7 (breakpoints): grids in Tasks 6, 8, 9 hit 768/1024 cutoffs; Task 14 adds <480px polish.
-- Spec § 8 (perf): `font-display: swap`, inline SVG only, no external JS — Task 3 sets fonts, Task 14 verifies via Lighthouse.
-- Spec § 9 (SEO): Task 3 lands meta + OG + JSON-LD; Task 15 reconciles canonical URL after deploy.
-- No résumé download link anywhere (removed per latest user direction).
-- No phone number anywhere (removed per latest user direction).
-- Type/class naming consistent: `.topnav`, `.btn`, `.card`, `.tile`, `.callout`, `.timeline`, `.mockup`, `.brand`, `.skills` — each used in markup and CSS in the same form.
+Open task. SEO meta references `assets/og-cover.png` (1200×630). File not yet created — social previews will show broken image until generated.
+
+**Files:**
+- Create: `assets/og-cover.png` (1200×630 PNG)
+
+**Acceptance criteria**
+- 1200×630 px PNG, < 200 KB.
+- Cream `#faf9f5` background.
+- Serif "Abhishek Jain" in EB Garamond / Tiempos Headline, ~96px, color `#141413`.
+- Sub-line "SVP Engineering · AI/AIOps · IoT Platforms" in Inter ~32px, color `#3d3d3a`.
+- Small coral accent stripe or spike-mark glyph at left edge for brand voltage.
+
+**Production options (pick one)**
+1. Open `index.html` in a browser at 1200×630 viewport, take a hero screenshot, crop to spec.
+2. Use Figma / Canva template with the tokens from `DESIGN.md`.
+3. Generate via Gemini/Banana (see `claude-blog:blog-image` skill) with a prompt referencing the design tokens.
+4. Hand-roll an HTML→PNG export with the existing `styles.css` + Playwright/Puppeteer screenshot.
+
+- [ ] **Step 1:** Produce the PNG by chosen method.
+- [ ] **Step 2:** Save to `assets/og-cover.png`.
+- [ ] **Step 3:** Validate via Open Graph debugger (`https://www.opengraph.xyz/?url=...`) after deploy.
+- [ ] **Step 4:** Commit
+  ```bash
+  git add assets/og-cover.png
+  git commit -m "feat(seo): add 1200x630 Open Graph cover image"
+  ```
+
+---
+
+## Task 17: Optional polish backlog
+
+Not blocking. Pick up any time.
+
+- Add a Plausible / GoatCounter privacy-respecting analytics snippet (out of original scope; add only if user asks).
+- Add a Search Console verification meta tag once site is verified.
+- Convert hero terminal mockup into a subtle animated typewriter for first paint (must respect `prefers-reduced-motion`).
+- Add structured "WorkExperience" / `Organization` entries to JSON-LD for each timeline role.
+- Add `<link rel="alternate" hreflang>` if Hindi translation is added.
+
+---
+
+## Self-Review Notes (updated 2026-05-24)
+
+### Spec coverage
+- Spec § 3 (sections): all 7 anchors covered (Tasks 4–11). Section DOM order corrected after initial implementation (`40601b4`).
+- Spec § 2 (theme tokens, fonts): Tasks 2 + 3 — verified, both light + dark blocks complete.
+- Spec § 4 (interactivity): Tasks 12 + 13 — single-IIFE rewrite (`4fdaa22`) consolidated scope and added focus trap.
+- Spec § 5 (file layout): Task 1; superset now includes `README.md`, `CLAUDE.md`, `robots.txt`, `sitemap.xml` — none of which conflict with spec.
+- Spec § 6 (a11y): skip link points to `#main`; reduced-motion honored in CSS + 2 JS paths; mobile menu has focus trap + Escape close + backdrop click close.
+- Spec § 7 (breakpoints): 700 / 800 / 900 / 1024 — footer breakpoint normalized to 800px for consistency with rest of layout.
+- Spec § 8 (perf): `display=swap` on Google Fonts URL, inline SVG only, no JS dependencies.
+- Spec § 9 (SEO): Task 3 + post-build SEO enrichment (`b77d034`) — full meta, OG, Twitter, JSON-LD graph (3 blocks linked by `@id`), `robots.txt`, `sitemap.xml`.
+
+### Hard rules
+- No résumé download link anywhere — verified by grep across all source.
+- No phone number anywhere — verified by grep.
+- Contact = email + LinkedIn only.
+
+### Deviations from original spec (accepted as intentional)
+- "Skills" added to nav, footer, and mobile menu (spec § 3.1 listed 5 nav links; impl has 6). Reason: aids in-page navigation; user accepted.
+- Sixth skills group "Leadership" added (spec § 3.6 listed 5 groups). Reason: matches résumé "Leadership & Strategy" competency block; user accepted.
+
+### Open items
+- `assets/og-cover.png` referenced but not created — Task 16.
+- Task 14 (Lighthouse pass) and Task 15 (Pages publish) — user-driven, awaiting action.
+- Canonical / OG URL hardcoded to `https://abhishekjain1.github.io/abhishekjain1/` — re-check after Pages deploy reveals actual URL.
 
 ---
 
 ## Execution Handoff
 
-Plan complete and saved to `docs/superpowers/plans/2026-05-24-personal-website.md`. Two execution options:
-
-1. **Subagent-Driven (recommended)** — Fresh subagent per task, review between tasks, fast iteration.
-2. **Inline Execution** — Execute tasks in this session using executing-plans, batch with checkpoints.
-
-Which approach?
+Plan saved to `docs/superpowers/plans/2026-05-24-personal-website.md` and executed via `superpowers:subagent-driven-development` on 2026-05-24. Build phase complete (15 commits on `main`). Remaining work is user-driven (Tasks 14, 15) plus Task 16 (OG image).
