@@ -129,4 +129,82 @@
     }, { threshold: 0.08 });
     targets.forEach(function (el) { io.observe(el); });
   }
+
+  /* ----- Hero terminal typewriter ----- */
+  (function () {
+    const pre = document.querySelector('.mockup__code');
+    if (!pre) return;
+
+    /* Tokenize current static content into segments (text + className).
+       Source-of-truth stays in HTML so no-JS and SEO see real content. */
+    const segments = [];
+    pre.childNodes.forEach(function (node) {
+      if (node.nodeType === 3 /* TEXT_NODE */) {
+        if (node.textContent.length) segments.push({ text: node.textContent, className: '' });
+      } else if (node.nodeType === 1 /* ELEMENT_NODE */) {
+        segments.push({ text: node.textContent, className: node.className || '' });
+      }
+    });
+    if (!segments.length) return;
+
+    /* Reduced motion: keep static content as-is, no animation. */
+    if (reduceMotion) return;
+
+    pre.textContent = '';
+    pre.classList.add('mockup__code--typing');
+
+    const cursor = document.createElement('span');
+    cursor.className = 'mockup__cursor';
+    cursor.setAttribute('aria-hidden', 'true');
+    pre.appendChild(cursor);
+
+    let segIdx = 0;
+    let charIdx = 0;
+    let currentSpan = null;
+    let started = false;
+    let timer = null;
+
+    function typeNext() {
+      if (segIdx >= segments.length) {
+        pre.classList.remove('mockup__code--typing');
+        pre.classList.add('mockup__code--done');
+        return;
+      }
+      const seg = segments[segIdx];
+      if (charIdx === 0) {
+        currentSpan = document.createElement('span');
+        if (seg.className) currentSpan.className = seg.className;
+        pre.insertBefore(currentSpan, cursor);
+      }
+      const ch = seg.text.charAt(charIdx);
+      currentSpan.appendChild(document.createTextNode(ch));
+      charIdx++;
+      if (charIdx >= seg.text.length) {
+        segIdx++;
+        charIdx = 0;
+      }
+      let delay;
+      if (ch === '\n') delay = 70;
+      else if (ch === ' ') delay = 14;
+      else delay = 10 + Math.random() * 18;
+      timer = setTimeout(typeNext, delay);
+    }
+
+    function start() {
+      if (started) return;
+      started = true;
+      timer = setTimeout(typeNext, 450);
+    }
+
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { start(); io.disconnect(); }
+        });
+      }, { threshold: 0.25 });
+      io.observe(pre);
+    } else {
+      start();
+    }
+  })();
 })();
