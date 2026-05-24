@@ -377,3 +377,13 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; col
 .mobile-menu nav a:hover { text-decoration: none; color: var(--primary); }
 .mobile-menu__cta { align-self: flex-start; }
 body.menu-open { overflow: hidden; }
+
+/* ----- Reveal animation ----- */
+.reveal {
+  opacity: 0; transform: translateY(12px);
+  transition: opacity .55s ease, transform .55s ease;
+}
+.reveal.in-view { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
