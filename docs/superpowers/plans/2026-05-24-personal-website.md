@@ -28,6 +28,10 @@
 | Favicon "AJ" monogram | ✅ Done | `9913718` | Replaced spike-mark favicon with serif "AJ" on coral |
 | Skills trim | ✅ Done | `6e0aa22` | Dropped IoT & Connectivity group; removed Go from Languages |
 | Default theme → dark | ✅ Done | `391fcb6` | `<html data-theme="dark">`, pre-paint default = dark, OS-pref change listener removed |
+| Hero terminal typewriter | ✅ Done | `ed750a9` | Tokenize-and-retype animation on hero entering viewport; static HTML for SEO/no-JS |
+| Clients heading copy | ✅ Done | `05921cc` | "Platforms shipped globally to MNOs and OEMs." |
+| Skills trim (IoT + Go) | ✅ Done | `6e0aa22` | Already logged above; included for chronology |
+| Resources page added | ✅ Done | `7c5e025`, `8a9f54c`, `efa6b88` | New page + first PDF — full breakdown in `2026-05-24-resources-page.md` |
 | Task 14 (Lighthouse) | ⏳ User-driven | — | Requires browser/DevTools |
 | Task 15 (Pages publish) | ⏳ User-driven | — | Requires GitHub UI |
 | Task 16 (OG cover image) | ⏳ Open | — | `assets/og-cover.png` referenced in meta but not yet generated |

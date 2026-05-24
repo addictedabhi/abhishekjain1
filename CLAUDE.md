@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Personal one-page website for Abhishek Jain, deployed to GitHub Pages from `main` at `https://abhishekjain1.github.io/abhishekjain1/`. Zero build, pure HTML/CSS/vanilla JS.
+Personal multi-page website for Abhishek Jain, deployed to GitHub Pages from `main` at `https://abhishekjain1.github.io/abhishekjain1/`. Zero build, pure HTML/CSS/vanilla JS. Two pages today: `index.html` (one-page profile) and `resources.html` (downloads index). Both share the same nav, footer, stylesheet, and `script.js`.
 
 ## Common commands
 
@@ -51,6 +51,14 @@ IntersectionObserver in `script.js` picks the entry with the greatest `intersect
 
 `assets/favicon.svg` is an "AJ" serif monogram (cream text on coral square). It is intentionally distinct from the nav/footer spike-mark wordmark — the spike-mark is the inline-brand glyph, the AJ monogram is the browser-tab signature. Replacing one does not imply replacing the other.
 
+### Resources page (`resources.html`)
+
+Standalone second page listing downloadable materials. PDFs (and future PPT / ZIP / etc.) live under `assets/resources/<slug>.<ext>` and are referenced from `<article class="resource">` cards with badge + title + description + meta row + download CTA. Downloads use the HTML5 `download` attribute on a plain `<a>` — no JS, no email gate, no analytics. Browser receives the file with a friendly capitalized filename even though the on-disk slug is kebab-case (e.g., on-disk `ai-unlocked-presentation-v2.pdf`, downloaded as `AI_Unlocked_Presentation_v2.pdf`).
+
+Cross-page nav: `resources.html` nav links point back to `index.html#section` anchors; `index.html` nav has one `resources.html` link. The `.active` class on the current page's nav entry is set statically in HTML (no JS for cross-page state).
+
+Resources page has its own JSON-LD: `CollectionPage` wrapping an `ItemList` of `DigitalDocument` items. Add a new resource by dropping the file in `assets/resources/`, pasting one `<article class="resource">` block, and appending one `DigitalDocument` ListItem to the JSON-LD array. `sitemap.xml` lists the resources index page (not individual files).
+
 ## Conventions
 
 - All section IDs are lowercase nouns (`#about`, `#expertise`, `#experience`, `#clients`, `#skills`, `#contact`). Nav links, footer links, mobile menu, and `BreadcrumbList` JSON-LD must stay in sync if you add or rename one.
@@ -74,7 +82,12 @@ This repo follows a brainstorm → spec → plan → execute discipline using th
 - Design specs: `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
 - Implementation plans: `docs/superpowers/plans/YYYY-MM-DD-<feature>.md`
 
-Before non-trivial changes, invoke `superpowers:brainstorming`, then `superpowers:writing-plans`, then execute via `superpowers:subagent-driven-development` (per-task subagent + spec-compliance review + code-quality review). The plan in this repo (`docs/superpowers/plans/2026-05-24-personal-website.md`) is the canonical task breakdown for the initial build — newer plans should be added alongside, not on top of, it.
+Before non-trivial changes, invoke `superpowers:brainstorming`, then `superpowers:writing-plans`, then execute via `superpowers:subagent-driven-development` (per-task subagent + spec-compliance review + code-quality review). Existing specs/plans in this repo:
+
+- `2026-05-24-personal-website-design.md` / `2026-05-24-personal-website.md` — initial one-page build.
+- `2026-05-24-resources-page-design.md` / `2026-05-24-resources-page.md` — Resources page (downloads index).
+
+Newer plans should be added alongside, not on top of, the existing ones.
 
 ## SEO surface
 

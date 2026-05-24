@@ -12,6 +12,23 @@
 
 ---
 
+## Execution Log
+
+| Phase | Status | Commits | Notes |
+|---|---|---|---|
+| Spec + plan committed | ✅ Done | `7c5e025` | — |
+| Task 1 (PDF asset) | ✅ Done | `8a9f54c` | Source `d:/1. My Projects/AI Session/AI_Unlocked_Presentation_v2 [Autosaved].pdf` copied to `assets/resources/ai-unlocked-presentation-v2.pdf` (977 KB, content untouched) |
+| Task 2 (styles) | ✅ Done | — | Appended to `assets/styles.css` |
+| Task 3 (resources.html) | ✅ Done | — | Full page with head/nav/hero/grid/footer/JSON-LD |
+| Task 4 (index nav wiring) | ✅ Done | — | Added Resources link to top nav, mobile menu, footer |
+| Task 5 (sitemap) | ✅ Done | `efa6b88` | resources.html URL added |
+| PDF size meta correction | ✅ Done | (in Task 3 or split) | `~2.4 MB` → `~1.0 MB` (actual file is 977 KB) |
+| Task 6 (browser verification) | ⏳ User-driven | — | Manual — open both pages, click Download |
+
+Implementer subagent executed Tasks 1–5 in a single dispatch on 2026-05-24. No spec-compliance or code-quality fixes were required (clean run).
+
+---
+
 ## File Structure
 
 | File | Responsibility |
