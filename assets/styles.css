@@ -290,15 +290,47 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; col
   grid-template-columns: repeat(2, 1fr);
 }
 @media (min-width: 700px)  { .tiles { grid-template-columns: repeat(3, 1fr); } }
-@media (min-width: 1024px) { .tiles { grid-template-columns: repeat(6, 1fr); } }
+@media (min-width: 1024px) { .tiles { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 1280px) { .tiles { grid-template-columns: repeat(6, 1fr); } }
 .tile {
-  display: flex; flex-direction: column; gap: 6px;
+  display: flex; flex-direction: column; gap: 10px;
   padding: 20px; border-radius: 12px;
   background: var(--canvas); border: 1px solid var(--hairline);
   color: var(--ink);
-  min-height: 96px; justify-content: space-between;
+  min-height: 128px; justify-content: space-between;
 }
 .tile .caption-up { color: var(--muted); }
+.tile__logo {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700; font-size: 14px; line-height: 1;
+  letter-spacing: -0.3px;
+  flex-shrink: 0;
+  user-select: none;
+}
+.tile__logo--stc      { background: #4F2D7F; color: #ffffff; }
+.tile__logo--jio      { background: #0F3CC9; color: #ffffff; }
+.tile__logo--ntt      { background: #0066B3; color: #ffffff; }
+.tile__logo--ammov    { background: #FFCB05; color: #141413; }
+.tile__logo--daimler  { background: #1F1F1F; color: #ffffff; }
+.tile__logo--gm       { background: #005DAA; color: #ffffff; }
+.tile__logo--etisalat { background: #62A744; color: #ffffff; }
+.tile__logo--maxis    { background: #0B5BAA; color: #ffffff; }
+.tile__logo--eicher   { background: #E2231A; color: #ffffff; }
+.tile__logo--volvo    { background: #1A57A5; color: #ffffff; }
+.tile__logo--google {
+  background: #ffffff;
+  border: 1px solid var(--hairline);
+  background-image: linear-gradient(135deg,
+    #4285F4 0 25%, #EA4335 25% 50%, #FBBC05 50% 75%, #34A853 75% 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  font-size: 22px;
+}
 
 /* ----- Skills ----- */
 .skills { display: grid; gap: 28px; }
