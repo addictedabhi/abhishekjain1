@@ -1,0 +1,1449 @@
+# Personal Website Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Build a one-page personal website for Abhishek Jain — pure HTML/CSS/JS, GitHub Pages hostable, light/dark theme, follows DESIGN.md (Anthropic warm cream + coral + dark navy editorial system).
+
+**Architecture:** Single `index.html` with 7 anchored sections (about, expertise, experience, clients, skills, contact + nav). One stylesheet `assets/styles.css` using CSS custom properties for theme tokens. One script `assets/script.js` handling theme persistence, smooth scroll, active-nav, mobile menu. Inline pre-paint theme script in `<head>` to prevent FOUC. Zero build, zero deps.
+
+**Tech Stack:** HTML5, CSS3 (custom properties, grid, flexbox), vanilla JS (ES2020). Google Fonts: EB Garamond, Inter, JetBrains Mono. Inline SVG icons. GitHub Pages static hosting.
+
+**Spec:** `docs/superpowers/specs/2026-05-24-personal-website-design.md`
+
+---
+
+## File Structure
+
+| File | Responsibility |
+|---|---|
+| `index.html` | Document structure, semantic landmarks, all section markup, inline pre-paint theme script, JSON-LD schema, meta tags |
+| `assets/styles.css` | Theme tokens (light + dark), typography scale, layout grid, every component style |
+| `assets/script.js` | Theme toggle, smooth scroll, active-nav observer, mobile menu, fade-in observer |
+| `assets/favicon.svg` | Spike-mark glyph favicon |
+| `.nojekyll` | Disable GitHub Pages Jekyll processing |
+
+Verification = open `index.html` in a browser. No test framework (static site, no logic worth unit-testing). Each task ends with a manual browser-verify step + git commit.
+
+---
+
+## Task 1: Scaffold project files
+
+**Files:**
+- Create: `.nojekyll`
+- Create: `assets/favicon.svg`
+- Create: `index.html` (placeholder)
+- Create: `assets/styles.css` (empty)
+- Create: `assets/script.js` (empty)
+
+- [ ] **Step 1: Create `.nojekyll`**
+
+Empty file (presence alone disables Jekyll on Pages).
+
+```
+```
+
+- [ ] **Step 2: Create `assets/favicon.svg` with the spike-mark glyph**
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <rect width="32" height="32" rx="6" fill="#faf9f5"/>
+  <g stroke="#141413" stroke-width="2.5" stroke-linecap="round">
+    <line x1="16" y1="6" x2="16" y2="26"/>
+    <line x1="6" y1="16" x2="26" y2="16"/>
+    <line x1="9" y1="9" x2="23" y2="23"/>
+    <line x1="23" y1="9" x2="9" y2="23"/>
+  </g>
+</svg>
+```
+
+- [ ] **Step 3: Create skeleton `index.html`**
+
+```html
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <title>Abhishek Jain — SVP Engineering</title>
+</head>
+<body>
+  <main>Scaffold.</main>
+</body>
+</html>
+```
+
+- [ ] **Step 4: Create empty `assets/styles.css` and `assets/script.js`**
+
+Both files empty (content added in later tasks).
+
+- [ ] **Step 5: Verify file tree**
+
+Run: `ls assets && ls -a`
+Expected: `.nojekyll`, `index.html`, `DESIGN.md`, `assets/` containing `favicon.svg styles.css script.js`.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add .nojekyll index.html assets/
+git commit -m "chore: scaffold static site skeleton"
+```
+
+---
+
+## Task 2: CSS — design tokens and base reset
+
+**Files:**
+- Modify: `assets/styles.css`
+
+- [ ] **Step 1: Write the token + reset block**
+
+Overwrite `assets/styles.css` with:
+
+```css
+/* ----- Tokens (light) ----- */
+:root, [data-theme="light"] {
+  --canvas: #faf9f5;
+  --surface-soft: #f5f0e8;
+  --surface-card: #efe9de;
+  --surface-cream-strong: #e8e0d2;
+  --surface-dark: #181715;
+  --surface-dark-elevated: #252320;
+  --surface-dark-soft: #1f1e1b;
+  --ink: #141413;
+  --body-strong: #252523;
+  --body: #3d3d3a;
+  --muted: #6c6a64;
+  --muted-soft: #8e8b82;
+  --hairline: #e6dfd8;
+  --hairline-soft: #ebe6df;
+  --primary: #cc785c;
+  --primary-active: #a9583e;
+  --on-primary: #ffffff;
+  --on-dark: #faf9f5;
+  --on-dark-soft: #a09d96;
+  --accent-teal: #5db8a6;
+  --accent-amber: #e8a55a;
+}
+
+/* ----- Tokens (dark) ----- */
+[data-theme="dark"] {
+  --canvas: #181715;
+  --surface-soft: #1f1e1b;
+  --surface-card: #252320;
+  --surface-cream-strong: #2e2c28;
+  --surface-dark: #0f0e0c;
+  --surface-dark-elevated: #1f1e1b;
+  --surface-dark-soft: #181715;
+  --ink: #faf9f5;
+  --body-strong: #ebe6df;
+  --body: #cfccc4;
+  --muted: #a09d96;
+  --muted-soft: #8e8b82;
+  --hairline: #2e2c28;
+  --hairline-soft: #252320;
+  --on-dark: #faf9f5;
+  --on-dark-soft: #a09d96;
+}
+
+/* ----- Reset ----- */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+body {
+  background: var(--canvas);
+  color: var(--body);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+img, svg { display: block; max-width: 100%; }
+button { font: inherit; cursor: pointer; border: 0; background: transparent; color: inherit; }
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ----- Typography scale ----- */
+.display-xl, .display-lg, .display-md, .display-sm {
+  font-family: 'EB Garamond', 'Tiempos Headline', Garamond, 'Times New Roman', serif;
+  font-weight: 500;
+  color: var(--ink);
+  margin: 0;
+}
+.display-xl { font-size: clamp(40px, 6vw, 64px); line-height: 1.05; letter-spacing: -1.5px; }
+.display-lg { font-size: clamp(32px, 4.5vw, 48px); line-height: 1.1; letter-spacing: -1px; }
+.display-md { font-size: clamp(28px, 3.5vw, 36px); line-height: 1.15; letter-spacing: -0.5px; }
+.display-sm { font-size: clamp(22px, 2.6vw, 28px); line-height: 1.2; letter-spacing: -0.3px; }
+
+.title-lg { font-size: 22px; font-weight: 500; line-height: 1.3; color: var(--ink); margin: 0; }
+.title-md { font-size: 18px; font-weight: 500; line-height: 1.4; color: var(--ink); margin: 0; }
+.title-sm { font-size: 16px; font-weight: 500; line-height: 1.4; color: var(--ink); margin: 0; }
+.body-md { font-size: 16px; line-height: 1.55; color: var(--body); }
+.body-sm { font-size: 14px; line-height: 1.55; color: var(--body); }
+.caption { font-size: 13px; font-weight: 500; line-height: 1.4; color: var(--muted); }
+.caption-up {
+  font-size: 12px; font-weight: 500; line-height: 1.4; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--muted);
+}
+.mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+/* ----- Layout ----- */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+@media (min-width: 768px) { .container { padding: 0 48px; } }
+
+.section { padding: 96px 0; }
+.section + .section { border-top: 1px solid var(--hairline-soft); }
+
+.skip-link {
+  position: absolute; left: -9999px;
+  background: var(--ink); color: var(--canvas);
+  padding: 12px 16px; border-radius: 8px;
+  z-index: 100;
+}
+.skip-link:focus { left: 16px; top: 16px; }
+```
+
+- [ ] **Step 2: Open `index.html` in a browser**
+
+Verify body background reads as warm cream (#faf9f5). Light theme renders.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add assets/styles.css
+git commit -m "feat(styles): add theme tokens, reset, typography scale"
+```
+
+---
+
+## Task 3: HTML — `<head>`, meta, fonts, JSON-LD, pre-paint theme script
+
+**Files:**
+- Modify: `index.html`
+
+- [ ] **Step 1: Replace `<head>` with full meta + font links + pre-paint theme script**
+
+Overwrite `<head>` block:
+
+```html
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Abhishek Jain — SVP Engineering · AI/AIOps · Connected Vehicles</title>
+  <meta name="description" content="Engineering leader with 15+ years building and scaling AI-native IoT, connected vehicle, and SaaS platforms for Fortune-500 operators and global OEMs.">
+  <meta name="theme-color" content="#faf9f5" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#181715" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="canonical" href="https://abhishekjain1.github.io/abhishekjain1/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="Abhishek Jain — SVP Engineering">
+  <meta property="og:description" content="Engineering leader building AI-native IoT platforms.">
+  <meta property="og:url" content="https://abhishekjain1.github.io/abhishekjain1/">
+  <meta name="twitter:card" content="summary">
+
+  <!-- Pre-paint theme (prevent FOUC) -->
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('theme');
+        var prefers = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', stored || prefers);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500;600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+
+  <link rel="stylesheet" href="assets/styles.css">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Abhishek Jain",
+    "jobTitle": "Senior Vice President, Engineering",
+    "email": "mailto:abhishekjain1@live.com",
+    "url": "https://abhishekjain1.github.io/abhishekjain1/",
+    "sameAs": ["https://www.linkedin.com/in/abhishekjain2603"],
+    "worksFor": { "@type": "Organization", "name": "Airlinq" },
+    "alumniOf": { "@type": "CollegeOrUniversity", "name": "The LNM Institute of Information Technology, Jaipur" },
+    "address": { "@type": "PostalAddress", "addressLocality": "Jaipur", "addressCountry": "IN" }
+  }
+  </script>
+</head>
+```
+
+- [ ] **Step 2: Reload `index.html` in browser**
+
+Verify tab title updates, no console errors, fonts load (`EB Garamond`, `Inter`, `JetBrains Mono` visible in DevTools → Network).
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add index.html
+git commit -m "feat(html): add meta, OG, JSON-LD, pre-paint theme, fonts"
+```
+
+---
+
+## Task 4: Top nav
+
+**Files:**
+- Modify: `index.html`
+- Modify: `assets/styles.css`
+
+- [ ] **Step 1: Replace `<body>` markup with nav + main scaffolding**
+
+```html
+<body>
+  <a href="#about" class="skip-link">Skip to content</a>
+
+  <header class="topnav" id="top">
+    <div class="container topnav__inner">
+      <a href="#top" class="brand" aria-label="Abhishek Jain — home">
+        <svg class="brand__mark" viewBox="0 0 24 24" aria-hidden="true">
+          <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="12" y1="3" x2="12" y2="21"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="5.5" y1="5.5" x2="18.5" y2="18.5"/>
+            <line x1="18.5" y1="5.5" x2="5.5" y2="18.5"/>
+          </g>
+        </svg>
+        <span>Abhishek Jain</span>
+      </a>
+
+      <nav class="topnav__links" aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#expertise">Expertise</a>
+        <a href="#experience">Experience</a>
+        <a href="#clients">Clients</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="topnav__actions">
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" aria-pressed="false">
+          <svg class="theme-toggle__sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <circle cx="12" cy="12" r="4" fill="currentColor"/>
+            <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
+              <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
+              <line x1="4.5" y1="4.5" x2="6.5" y2="6.5"/><line x1="17.5" y1="17.5" x2="19.5" y2="19.5"/>
+              <line x1="4.5" y1="19.5" x2="6.5" y2="17.5"/><line x1="17.5" y1="6.5" x2="19.5" y2="4.5"/>
+            </g>
+          </svg>
+          <svg class="theme-toggle__moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z" fill="currentColor"/>
+          </svg>
+        </button>
+        <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="4" y1="7" x2="20" y2="7"/>
+              <line x1="4" y1="12" x2="20" y2="12"/>
+              <line x1="4" y1="17" x2="20" y2="17"/>
+            </g>
+          </svg>
+        </button>
+        <a href="#contact" class="btn btn--primary topnav__cta">Get in touch</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- sections added in later tasks -->
+  </main>
+
+  <script src="assets/script.js" defer></script>
+</body>
+```
+
+- [ ] **Step 2: Append nav + button styles to `assets/styles.css`**
+
+```css
+/* ----- Buttons ----- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 40px; padding: 0 20px;
+  font-size: 14px; font-weight: 500; line-height: 1;
+  border-radius: 8px; transition: background-color .15s ease;
+}
+.btn--primary { background: var(--primary); color: var(--on-primary); }
+.btn--primary:hover { background: var(--primary-active); text-decoration: none; }
+.btn--secondary { background: var(--canvas); color: var(--ink); border: 1px solid var(--hairline); }
+.btn--secondary:hover { background: var(--surface-card); text-decoration: none; }
+.btn--on-coral { background: var(--canvas); color: var(--ink); }
+.btn--on-coral:hover { background: var(--surface-card); text-decoration: none; }
+
+/* ----- Top nav ----- */
+.topnav {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--canvas) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--hairline);
+}
+.topnav__inner {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+}
+.brand {
+  display: inline-flex; align-items: center; gap: 10px;
+  color: var(--ink); font-weight: 600; font-size: 16px;
+}
+.brand:hover { text-decoration: none; }
+.brand__mark { width: 22px; height: 22px; color: var(--ink); }
+.topnav__links { display: none; gap: 28px; }
+.topnav__links a {
+  color: var(--ink); font-size: 14px; font-weight: 500;
+  position: relative;
+}
+.topnav__links a:hover { color: var(--primary); text-decoration: none; }
+.topnav__links a.active { color: var(--primary); }
+.topnav__links a.active::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -22px; height: 2px;
+  background: var(--primary);
+}
+.topnav__actions { display: flex; align-items: center; gap: 8px; }
+.topnav__cta { display: none; }
+.theme-toggle {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--ink); border: 1px solid var(--hairline);
+}
+.theme-toggle:hover { background: var(--surface-card); }
+.theme-toggle__sun { display: none; }
+[data-theme="dark"] .theme-toggle__sun { display: block; }
+[data-theme="dark"] .theme-toggle__moon { display: none; }
+[data-theme="light"] .theme-toggle__moon { display: block; }
+.menu-toggle {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--ink); border: 1px solid var(--hairline);
+}
+
+@media (min-width: 900px) {
+  .topnav__links { display: inline-flex; }
+  .topnav__cta { display: inline-flex; }
+  .menu-toggle { display: none; }
+}
+```
+
+- [ ] **Step 3: Reload in browser**
+
+Verify nav row renders with wordmark left, "Get in touch" coral button right, theme toggle visible. Hamburger appears < 900px.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add index.html assets/styles.css
+git commit -m "feat(nav): add sticky top nav with theme toggle and hamburger"
+```
+
+---
+
+## Task 5: Hero section (`#about`)
+
+**Files:**
+- Modify: `index.html`
+- Modify: `assets/styles.css`
+
+- [ ] **Step 1: Insert hero into `<main>`**
+
+```html
+<section id="about" class="section hero" aria-labelledby="hero-title">
+  <div class="container hero__grid">
+    <div class="hero__lede">
+      <span class="badge">SVP Engineering · Jaipur, India</span>
+      <h1 id="hero-title" class="display-xl">Engineering leader building AI-native IoT platforms.</h1>
+      <p class="hero__sub body-md">15+ years scaling distributed platform teams across four continents — from co-founding Teramatrix (acquired) to leading a 50-person engineering organization at Airlinq. Today, embedding AI-assisted development and AIOps into the engineering culture for Fortune-500 operators and global automotive OEMs.</p>
+      <div class="hero__cta">
+        <a href="#contact" class="btn btn--primary">Get in touch</a>
+        <a href="#experience" class="btn btn--secondary">See my work</a>
+      </div>
+    </div>
+
+    <aside class="hero__mockup" aria-hidden="true">
+      <div class="mockup">
+        <div class="mockup__bar">
+          <span class="mockup__dot"></span><span class="mockup__dot"></span><span class="mockup__dot"></span>
+          <span class="mockup__title mono">~/airlinq · claude-code</span>
+        </div>
+        <pre class="mockup__code mono"><span class="c-teal">$</span> claude review pr/4821
+<span class="c-muted">→ Loading agent spec: aiops-observability</span>
+<span class="c-muted">→ Scoring 12 changed files...</span>
+
+<span class="c-coral">●</span> 3 findings · 1 critical
+  <span class="c-muted">k8s/master.yaml:42</span>
+  <span class="c-amber">tcp_threshold too aggressive on master role</span>
+
+<span class="c-teal">●</span> Suggested fix applied
+  <span class="c-muted">+ context_switch budget: role-aware</span>
+  <span class="c-muted">+ false-positive rate -94%</span>
+
+<span class="c-teal">$</span> _</pre>
+      </div>
+    </aside>
+  </div>
+</section>
+```
+
+- [ ] **Step 2: Append hero + mockup + badge styles**
+
+```css
+/* ----- Badges ----- */
+.badge {
+  display: inline-block;
+  background: var(--surface-card); color: var(--ink);
+  font-size: 13px; font-weight: 500; line-height: 1.4;
+  padding: 4px 12px; border-radius: 9999px;
+}
+.badge--coral {
+  background: var(--primary); color: var(--on-primary);
+  font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+}
+
+/* ----- Hero ----- */
+.hero { padding-top: 64px; }
+.hero__grid {
+  display: grid; gap: 48px;
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .hero__grid { grid-template-columns: 1fr 1fr; gap: 64px; }
+}
+.hero__lede > * + * { margin-top: 24px; }
+.hero__sub { color: var(--body); font-size: 18px; max-width: 56ch; }
+.hero__cta { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.hero__mockup .mockup {
+  background: var(--surface-dark); color: var(--on-dark);
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 1px 3px rgba(20,20,19,.08);
+}
+.mockup__bar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 12px 16px;
+  background: var(--surface-dark-elevated);
+  border-bottom: 1px solid #2e2c28;
+}
+.mockup__dot { width: 10px; height: 10px; border-radius: 50%; background: #3d3b37; }
+.mockup__dot:nth-child(1) { background: #e8a55a; }
+.mockup__dot:nth-child(2) { background: #5db872; }
+.mockup__dot:nth-child(3) { background: #c64545; }
+.mockup__title { margin-left: 12px; font-size: 12px; color: var(--on-dark-soft); }
+.mockup__code {
+  padding: 24px; margin: 0;
+  font-size: 13px; line-height: 1.7;
+  color: var(--on-dark);
+  white-space: pre; overflow-x: auto;
+}
+.c-coral { color: var(--primary); }
+.c-teal  { color: var(--accent-teal); }
+.c-amber { color: var(--accent-amber); }
+.c-muted { color: var(--on-dark-soft); }
+```
+
+- [ ] **Step 3: Reload, verify hero**
+
+Headline displays in serif (EB Garamond), coral pill badge, two CTAs side-by-side, terminal mockup with coloured tokens.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add index.html assets/styles.css
+git commit -m "feat(hero): add intro headline, sub-line, CTAs, terminal mockup"
+```
+
+---
+
+## Task 6: Expertise section (`#expertise`)
+
+**Files:**
+- Modify: `index.html`
+- Modify: `assets/styles.css`
+
+- [ ] **Step 1: Append expertise section to `<main>`**
+
+```html
+<section id="expertise" class="section" aria-labelledby="expertise-title">
+  <div class="container">
+    <header class="section__head">
+      <span class="caption-up">What I do</span>
+      <h2 id="expertise-title" class="display-lg">Three areas where I move the needle.</h2>
+    </header>
+
+    <div class="cards cards--3">
+      <article class="card">
+        <div class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+        <h3 class="title-md">AI-Assisted Development &amp; AIOps</h3>
+        <p class="body-md">Claude Code agent specs, LLM-driven code review, automated repo evaluation, and ML-based anomaly detection across Kubernetes fleets. Engineering velocity up ~40%; false-positive alert storms eliminated.</p>
+      </article>
+
+      <article class="card">
+        <div class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="3" x2="12" y2="6" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="18" x2="12" y2="21" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+        <h3 class="title-md">Connected Vehicle &amp; IoT Platforms</h3>
+        <p class="body-md">Enterprise CMP for Tier-1 MNOs — real-time device lifecycle management at 50M+ endpoint scale. OTA orchestration and telemetry pipelines for Daimler and GM at automotive scale.</p>
+      </article>
+
+      <article class="card">
+        <div class="card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2M21 21v-2a4 4 0 00-3-3.87M9 7a4 4 0 108 0 4 4 0 00-8 0zM17 3.13a4 4 0 010 7.75" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+        <h3 class="title-md">Engineering Leadership</h3>
+        <p class="body-md">0→1 team building (Teramatrix, acquired by Airlinq), scaled to a 50+ person remote-first organization across India, LATAM, Middle East, and Japan. M&amp;A technical integration and async culture design.</p>
+      </article>
+    </div>
+  </div>
+</section>
+```
+
+- [ ] **Step 2: Append section head + card grid styles**
+
+```css
+/* ----- Section heading ----- */
+.section__head { margin-bottom: 48px; max-width: 60ch; }
+.section__head .caption-up { display: inline-block; margin-bottom: 12px; color: var(--primary); }
+.section__head h2 { margin-top: 0; }
+
+/* ----- Card grids ----- */
+.cards { display: grid; gap: 20px; grid-template-columns: 1fr; }
+@media (min-width: 700px)  { .cards--3 { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1024px) { .cards--3 { grid-template-columns: repeat(3, 1fr); } }
+
+.card {
+  background: var(--surface-card); color: var(--ink);
+  border-radius: 12px; padding: 32px;
+}
+.card > * + * { margin-top: 16px; }
+.card__icon {
+  width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--canvas); color: var(--primary);
+  border-radius: 8px;
+}
+.card__icon svg { width: 22px; height: 22px; }
+```
+
+- [ ] **Step 3: Reload, verify**
+
+Three cream cards in a 3-up row on desktop, 2-up tablet, 1-up mobile. Coral icon badges. Headings in serif sans (title-md uses Inter, h2 above uses EB Garamond).
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add index.html assets/styles.css
+git commit -m "feat(expertise): add three-card expertise grid"
+```
+
+---
+
+## Task 7: Experience timeline (`#experience`)
+
+**Files:**
+- Modify: `index.html`
+- Modify: `assets/styles.css`
+
+- [ ] **Step 1: Append experience section**
+
+```html
+<section id="experience" class="section section--soft" aria-labelledby="experience-title">
+  <div class="container">
+    <header class="section__head">
+      <span class="caption-up">Career</span>
+      <h2 id="experience-title" class="display-lg">Fifteen years of platform building.</h2>
+    </header>
+
+    <ol class="timeline">
+      <li class="timeline__item">
+        <div class="timeline__meta">
+          <span class="caption-up">Jul 2021 – Present</span>
+          <span class="caption-up timeline__company">Airlinq</span>
+        </div>
+        <div class="timeline__body">
+          <h3 class="title-lg">Senior Vice President, Engineering</h3>
+          <p class="body-md">Built and mentored a 50+ person cross-functional engineering organization spanning cloud infrastructure, backend services, embedded/IoT systems, and platform reliability.</p>
+          <ul class="bullets body-md">
+            <li>Pioneering AI-assisted development culture — Claude Code agent specs, LLM-driven code review pipelines, ~40% velocity lift.</li>
+            <li>Architecting AIOps observability stack: Grafana + Telegraf + ML-based anomaly detection with role-aware threshold tuning.</li>
+            <li>Delivered enterprise CMP for STC, Reliance Jio, NTT, and América Móvil — tens of millions of connected endpoints.</li>
+            <li>Leading connected vehicle IoT solutions for Daimler and GM — OTA orchestration and edge-to-cloud telemetry at automotive scale.</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="timeline__item">
+        <div class="timeline__meta">
+          <span class="caption-up">Jun 2017 – Jun 2021</span>
+          <span class="caption-up timeline__company">Globetouch (now Airlinq)</span>
+        </div>
+        <div class="timeline__body">
+          <h3 class="title-lg">AVP → VP, Engineering</h3>
+          <p class="body-md">Led technology strategy across the IoT connectivity platform — drove modernization from monolith to microservices on Kubernetes.</p>
+          <ul class="bullets body-md">
+            <li>Defined DevOps and CI/CD frameworks; infrastructure-as-code cut deployment lead times by 60%.</li>
+            <li>Pivotal role in the Globetouch → Airlinq rebrand — realigned engineering roadmap with AI-native IoT vision.</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="timeline__item">
+        <div class="timeline__meta">
+          <span class="caption-up">Apr 2013 – Jun 2017</span>
+          <span class="caption-up timeline__company">Teramatrix Technologies</span>
+        </div>
+        <div class="timeline__body">
+          <h3 class="title-lg">Co-Founder &amp; CTO</h3>
+          <p class="body-md">IoT data intelligence startup — real-time aggregation, mediation, and visualization platform. Acquired by Airlinq, Inc.</p>
+          <ul class="bullets body-md">
+            <li>Built engineering organization from zero — co-founded, scaled to commercial IoT data platform serving telecom and enterprise clients across India and SE Asia.</li>
+            <li>Built unified aggregation + mediation + visualization stack — foundational IP that became the core of Airlinq's CMP.</li>
+            <li>Navigated successful acquisition by Airlinq — led technical due diligence, IP transfer, and full team integration.</li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="timeline__item">
+        <div class="timeline__meta">
+          <span class="caption-up">Sep 2009 – Mar 2013</span>
+          <span class="caption-up timeline__company">Codescape Consultants</span>
+        </div>
+        <div class="timeline__body">
+          <h3 class="title-lg">Co-Founder &amp; CTO</h3>
+          <p class="body-md">Technology consultancy focused on large-scale network analytics platforms for telecom operators and ISPs across APAC and the Middle East.</p>
+        </div>
+      </li>
+    </ol>
+
+    <aside class="edu">
+      <span class="caption-up">Education</span>
+      <p class="body-md"><strong>B.Tech, Communication &amp; Computer Engineering</strong> — The LNM Institute of Information Technology, Jaipur · 2009</p>
+    </aside>
+  </div>
+</section>
+```
+
+- [ ] **Step 2: Append timeline styles**
+
+```css
+.section--soft { background: var(--surface-soft); }
+
+.timeline { list-style: none; padding: 0; margin: 0; }
+.timeline__item {
+  display: grid; gap: 16px;
+  grid-template-columns: 1fr;
+  padding: 32px 0;
+  border-top: 1px solid var(--hairline);
+}
+.timeline__item:first-child { border-top: 0; padding-top: 0; }
+@media (min-width: 800px) {
+  .timeline__item { grid-template-columns: 220px 1fr; gap: 48px; }
+}
+.timeline__meta { display: flex; flex-direction: column; gap: 4px; }
+.timeline__company { color: var(--primary); }
+.timeline__body > * + * { margin-top: 12px; }
+.bullets { list-style: none; padding: 0; }
+.bullets li { position: relative; padding-left: 20px; margin-top: 8px; }
+.bullets li::before {
+  content: ''; position: absolute; left: 0; top: 10px;
+  width: 6px; height: 6px; border-radius: 50%; background: var(--primary);
+}
+
+.edu {
+  margin-top: 48px; padding: 24px;
+  border-left: 3px solid var(--primary);
+  background: var(--canvas);
+  border-radius: 0 8px 8px 0;
+}
+.edu .caption-up { display: block; margin-bottom: 8px; color: var(--muted); }
+```
+
+- [ ] **Step 3: Reload, verify**
+
+Four timeline rows render with date/company column left and role + bullets right (≥800px). Stacks vertically on mobile. Education callout beneath.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add index.html assets/styles.css
+git commit -m "feat(experience): add career timeline and education block"
+```
+
+---
+
+## Task 8: Global client footprint (`#clients`)
+
+**Files:**
+- Modify: `index.html`
+- Modify: `assets/styles.css`
+
+- [ ] **Step 1: Append clients section**
+
+```html
+<section id="clients" class="section" aria-labelledby="clients-title">
+  <div class="container">
+    <header class="section__head">
+      <span class="caption-up">Footprint</span>
+      <h2 id="clients-title" class="display-lg">Platforms shipped for global operators.</h2>
+    </header>
+
+    <ul class="tiles">
+      <li class="tile"><span class="title-sm">STC</span><span class="caption-up">Saudi Arabia</span></li>
+      <li class="tile"><span class="title-sm">Reliance Jio</span><span class="caption-up">India</span></li>
+      <li class="tile"><span class="title-sm">NTT</span><span class="caption-up">Japan</span></li>
+      <li class="tile"><span class="title-sm">América Móvil</span><span class="caption-up">LATAM</span></li>
+      <li class="tile"><span class="title-sm">Daimler</span><span class="caption-up">Germany</span></li>
+      <li class="tile"><span class="title-sm">General Motors</span><span class="caption-up">USA</span></li>
+    </ul>
+  </div>
+</section>
+```
+
+- [ ] **Step 2: Append tile styles**
+
+```css
+.tiles {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(2, 1fr);
+}
+@media (min-width: 700px)  { .tiles { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1024px) { .tiles { grid-template-columns: repeat(6, 1fr); } }
+.tile {
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 20px; border-radius: 12px;
+  background: var(--canvas); border: 1px solid var(--hairline);
+  color: var(--ink);
+  min-height: 96px; justify-content: space-between;
+}
+.tile .caption-up { color: var(--muted); }
+```
+
+- [ ] **Step 3: Reload, verify**
+
+Six client tiles render in 6-up (desktop), 3-up (tablet), 2-up (mobile).
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add index.html assets/styles.css
+git commit -m "feat(clients): add global client footprint tiles"
+```
+
+---
+
+## Task 9: Skills (`#skills`)
+
+**Files:**
+- Modify: `index.html`
+- Modify: `assets/styles.css`
+
+- [ ] **Step 1: Append skills section**
+
+```html
+<section id="skills" class="section section--soft" aria-labelledby="skills-title">
+  <div class="container">
+    <header class="section__head">
+      <span class="caption-up">Tech stack</span>
+      <h2 id="skills-title" class="display-lg">Tools I work with daily.</h2>
+    </header>
+
+    <dl class="skills">
+      <div class="skills__group">
+        <dt class="caption-up">AI / LLM</dt>
+        <dd><span class="pill">Claude Code</span><span class="pill">GitHub Copilot</span><span class="pill">LLM-assisted dev</span><span class="pill">Prompt Engineering</span><span class="pill">AI workflow automation</span></dd>
+      </div>
+      <div class="skills__group">
+        <dt class="caption-up">Cloud &amp; Infra</dt>
+        <dd><span class="pill">Kubernetes</span><span class="pill">Docker</span><span class="pill">AWS</span><span class="pill">Azure</span><span class="pill">Terraform</span><span class="pill">Helm</span><span class="pill">CI/CD</span><span class="pill">Microservices</span></dd>
+      </div>
+      <div class="skills__group">
+        <dt class="caption-up">AIOps &amp; Observability</dt>
+        <dd><span class="pill">Grafana</span><span class="pill">Telegraf</span><span class="pill">Prometheus</span><span class="pill">ML anomaly detection</span></dd>
+      </div>
+      <div class="skills__group">
+        <dt class="caption-up">IoT &amp; Connectivity</dt>
+        <dd><span class="pill">CMP</span><span class="pill">OTA</span><span class="pill">MQTT</span><span class="pill">CoAP</span><span class="pill">Edge computing</span><span class="pill">Vehicle telemetry</span></dd>
+      </div>
+      <div class="skills__group">
+        <dt class="caption-up">Languages</dt>
+        <dd><span class="pill">Python</span><span class="pill">Go</span><span class="pill">JavaScript / Node.js</span><span class="pill">Java</span><span class="pill">SQL / NoSQL</span></dd>
+      </div>
+      <div class="skills__group">
+        <dt class="caption-up">Leadership</dt>
+        <dd><span class="pill">Remote-first org design</span><span class="pill">0→1 team building</span><span class="pill">M&amp;A</span><span class="pill">Async culture</span><span class="pill">OKR planning</span></dd>
+      </div>
+    </dl>
+  </div>
+</section>
+```
+
+- [ ] **Step 2: Append skills styles**
+
+```css
+.skills { display: grid; gap: 28px; }
+.skills__group { display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 800px) {
+  .skills__group { grid-template-columns: 200px 1fr; align-items: baseline; gap: 32px; }
+}
+.skills dd { margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.pill {
+  display: inline-block;
+  background: var(--canvas); color: var(--ink);
+  border: 1px solid var(--hairline);
+  padding: 6px 12px; border-radius: 9999px;
+  font-size: 13px; font-weight: 500;
+}
+```
+
+- [ ] **Step 3: Reload, verify**
+
+Six groups, each label left + pills right (≥800px). Pills wrap.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add index.html assets/styles.css
+git commit -m "feat(skills): add tech-stack pill groups"
+```
+
+---
+
+## Task 10: Contact callout (`#contact`)
+
+**Files:**
+- Modify: `index.html`
+- Modify: `assets/styles.css`
+
+- [ ] **Step 1: Append contact section**
+
+```html
+<section id="contact" class="section" aria-labelledby="contact-title">
+  <div class="container">
+    <div class="callout">
+      <header>
+        <span class="badge badge--coral">Get in touch</span>
+        <h2 id="contact-title" class="display-md callout__title">Let's build something.</h2>
+        <p class="body-md callout__sub">Open to advisory, founding-engineering, and platform-leadership conversations. The fastest way to reach me is email.</p>
+      </header>
+      <div class="callout__actions">
+        <a href="mailto:abhishekjain1@live.com" class="btn btn--on-coral">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="margin-right:8px">
+            <path d="M3 6h18v12H3z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M3 6l9 7 9-7" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          abhishekjain1@live.com
+        </a>
+        <a href="https://www.linkedin.com/in/abhishekjain2603" class="btn btn--on-coral" rel="noopener" target="_blank">
+          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" style="margin-right:8px">
+            <path d="M4 4h4v4H4zM4 10h4v10H4zM10 10h4v2c1-1.5 2.5-2.5 4.5-2.5 3 0 4.5 2 4.5 5V20h-4v-5c0-1.5-.5-2.5-2-2.5s-2.5 1-2.5 2.5V20h-4z" fill="currentColor"/>
+          </svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+- [ ] **Step 2: Append callout styles**
+
+```css
+.callout {
+  background: var(--primary); color: var(--on-primary);
+  border-radius: 16px; padding: 56px 32px;
+  text-align: left;
+}
+@media (min-width: 800px) { .callout { padding: 72px 64px; } }
+.callout > * + * { margin-top: 24px; }
+.callout__title { color: var(--on-primary); margin-top: 16px; }
+.callout__sub { color: var(--on-primary); opacity: .92; max-width: 56ch; }
+.callout__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.callout .badge--coral { background: rgba(255,255,255,.18); color: var(--on-primary); }
+```
+
+- [ ] **Step 3: Reload, verify**
+
+Coral block at bottom, two cream buttons (Email + LinkedIn), serif headline.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add index.html assets/styles.css
+git commit -m "feat(contact): add coral get-in-touch callout"
+```
+
+---
+
+## Task 11: Footer + mobile menu sheet
+
+**Files:**
+- Modify: `index.html`
+- Modify: `assets/styles.css`
+
+- [ ] **Step 1: Append footer after `</main>` and add mobile menu container inside body**
+
+After `</main>`:
+
+```html
+<footer class="footer" role="contentinfo">
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <a href="#top" class="brand brand--on-dark">
+        <svg class="brand__mark" viewBox="0 0 24 24" aria-hidden="true">
+          <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="12" y1="3" x2="12" y2="21"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="5.5" y1="5.5" x2="18.5" y2="18.5"/>
+            <line x1="18.5" y1="5.5" x2="5.5" y2="18.5"/>
+          </g>
+        </svg>
+        <span>Abhishek Jain</span>
+      </a>
+      <p class="body-sm footer__tag">SVP Engineering · AI/AIOps · Connected Vehicles · IoT Platforms.</p>
+    </div>
+
+    <nav class="footer__col" aria-label="Sections">
+      <span class="caption-up">Sections</span>
+      <a href="#about">About</a>
+      <a href="#expertise">Expertise</a>
+      <a href="#experience">Experience</a>
+      <a href="#clients">Clients</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="footer__col">
+      <span class="caption-up">Contact</span>
+      <a href="mailto:abhishekjain1@live.com">abhishekjain1@live.com</a>
+    </div>
+
+    <div class="footer__col">
+      <span class="caption-up">Elsewhere</span>
+      <a href="https://www.linkedin.com/in/abhishekjain2603" rel="noopener" target="_blank">LinkedIn</a>
+    </div>
+  </div>
+  <div class="container footer__bottom">
+    <span class="body-sm">© 2026 Abhishek Jain</span>
+    <span class="body-sm">Built with HTML, CSS &amp; Claude Code.</span>
+  </div>
+</footer>
+```
+
+Just before `<script src="assets/script.js" defer></script>` add the mobile menu sheet:
+
+```html
+<div class="mobile-menu" id="mobile-menu" hidden>
+  <div class="mobile-menu__panel">
+    <button class="mobile-menu__close" type="button" aria-label="Close menu">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+        <g stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="6" y1="6" x2="18" y2="18"/>
+          <line x1="18" y1="6" x2="6" y2="18"/>
+        </g>
+      </svg>
+    </button>
+    <nav aria-label="Mobile primary">
+      <a href="#about">About</a>
+      <a href="#expertise">Expertise</a>
+      <a href="#experience">Experience</a>
+      <a href="#clients">Clients</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a href="#contact" class="btn btn--primary mobile-menu__cta">Get in touch</a>
+  </div>
+</div>
+```
+
+- [ ] **Step 2: Append footer + mobile menu styles**
+
+```css
+/* ----- Footer ----- */
+.footer { background: var(--surface-dark); color: var(--on-dark-soft); padding: 64px 0 32px; margin-top: 96px; }
+.brand--on-dark, .brand--on-dark .brand__mark { color: var(--on-dark); }
+.footer__grid {
+  display: grid; gap: 32px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 700px)  { .footer__grid { grid-template-columns: 2fr 1fr 1fr 1fr; } }
+.footer__brand .body-sm { color: var(--on-dark-soft); margin-top: 12px; max-width: 36ch; }
+.footer__col { display: flex; flex-direction: column; gap: 10px; }
+.footer__col .caption-up { color: var(--on-dark); margin-bottom: 4px; }
+.footer__col a { color: var(--on-dark-soft); font-size: 14px; }
+.footer__col a:hover { color: var(--on-dark); text-decoration: underline; }
+.footer__bottom {
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  margin-top: 48px; padding-top: 24px;
+  border-top: 1px solid #2e2c28;
+}
+.footer__bottom .body-sm { color: var(--on-dark-soft); }
+
+/* ----- Mobile menu ----- */
+.mobile-menu {
+  position: fixed; inset: 0; z-index: 100;
+  background: var(--canvas);
+}
+.mobile-menu[hidden] { display: none; }
+.mobile-menu__panel {
+  height: 100%; display: flex; flex-direction: column;
+  padding: 24px 24px 32px; gap: 24px;
+}
+.mobile-menu__close {
+  align-self: flex-end;
+  width: 44px; height: 44px; border-radius: 50%;
+  color: var(--ink); border: 1px solid var(--hairline);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.mobile-menu nav {
+  display: flex; flex-direction: column; gap: 8px;
+  margin-top: 16px;
+}
+.mobile-menu nav a {
+  font-family: 'EB Garamond', serif;
+  font-size: 28px; color: var(--ink);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--hairline-soft);
+}
+.mobile-menu nav a:hover { text-decoration: none; color: var(--primary); }
+.mobile-menu__cta { align-self: flex-start; }
+body.menu-open { overflow: hidden; }
+```
+
+- [ ] **Step 3: Reload, verify**
+
+Footer renders dark navy with 4 columns. Hamburger opens nothing yet (script in next task).
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add index.html assets/styles.css
+git commit -m "feat(footer): add dark footer and mobile menu sheet markup"
+```
+
+---
+
+## Task 12: JS — theme toggle
+
+**Files:**
+- Modify: `assets/script.js`
+
+- [ ] **Step 1: Write theme-toggle module**
+
+Overwrite `assets/script.js`:
+
+```js
+(function () {
+  'use strict';
+
+  const root = document.documentElement;
+  const toggleBtn = document.querySelector('.theme-toggle');
+
+  function applyTheme(theme) {
+    root.setAttribute('data-theme', theme);
+    if (toggleBtn) toggleBtn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+  }
+
+  function currentTheme() {
+    return root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  }
+
+  // Sync aria-pressed with the pre-painted theme on load.
+  applyTheme(currentTheme());
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', function () {
+      const next = currentTheme() === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+  }
+
+  // React to OS-level theme changes when the user hasn't picked one.
+  if (window.matchMedia) {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    mq.addEventListener && mq.addEventListener('change', function (e) {
+      let stored = null;
+      try { stored = localStorage.getItem('theme'); } catch (err) {}
+      if (!stored) applyTheme(e.matches ? 'dark' : 'light');
+    });
+  }
+})();
+```
+
+- [ ] **Step 2: Reload, click theme toggle**
+
+Verify: page flips between cream canvas and dark navy canvas. Reload — last-chosen theme persists.
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add assets/script.js
+git commit -m "feat(js): add theme toggle with localStorage persistence"
+```
+
+---
+
+## Task 13: JS — smooth scroll, active nav, mobile menu, fade-in
+
+**Files:**
+- Modify: `assets/script.js`
+
+- [ ] **Step 1: Append the rest of the JS modules**
+
+Append (after the closing IIFE):
+
+```js
+
+/* ----- Smooth scroll for in-page anchors ----- */
+(function () {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      const id = a.getAttribute('href');
+      if (!id || id === '#' || id.length < 2) return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      history.replaceState(null, '', id);
+      closeMobileMenu();
+    });
+  });
+})();
+
+/* ----- Active nav link via IntersectionObserver ----- */
+(function () {
+  const links = document.querySelectorAll('.topnav__links a[href^="#"]');
+  if (!links.length || !('IntersectionObserver' in window)) return;
+  const linkById = {};
+  links.forEach(function (a) {
+    const id = a.getAttribute('href').slice(1);
+    if (id) linkById[id] = a;
+  });
+  const sections = Object.keys(linkById)
+    .map(function (id) { return document.getElementById(id); })
+    .filter(Boolean);
+
+  const observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      const link = linkById[entry.target.id];
+      if (!link) return;
+      if (entry.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+
+  sections.forEach(function (s) { observer.observe(s); });
+})();
+
+/* ----- Mobile menu toggle ----- */
+let closeMobileMenu = function () {};
+(function () {
+  const openBtn = document.querySelector('.menu-toggle');
+  const sheet = document.getElementById('mobile-menu');
+  if (!openBtn || !sheet) return;
+  const closeBtn = sheet.querySelector('.mobile-menu__close');
+
+  function open() {
+    sheet.hidden = false;
+    document.body.classList.add('menu-open');
+    openBtn.setAttribute('aria-expanded', 'true');
+    const firstLink = sheet.querySelector('a');
+    if (firstLink) firstLink.focus();
+  }
+  function close() {
+    sheet.hidden = true;
+    document.body.classList.remove('menu-open');
+    openBtn.setAttribute('aria-expanded', 'false');
+  }
+  closeMobileMenu = close;
+
+  openBtn.addEventListener('click', open);
+  closeBtn && closeBtn.addEventListener('click', close);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !sheet.hidden) close();
+  });
+})();
+
+/* ----- Fade-in on scroll ----- */
+(function () {
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !('IntersectionObserver' in window)) return;
+  const targets = document.querySelectorAll('.section, .hero__mockup, .card, .tile');
+  targets.forEach(function (el) { el.classList.add('reveal'); });
+  const io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('in-view');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  targets.forEach(function (el) { io.observe(el); });
+})();
+```
+
+- [ ] **Step 2: Append reveal styles to `assets/styles.css`**
+
+```css
+/* ----- Reveal animation ----- */
+.reveal {
+  opacity: 0; transform: translateY(12px);
+  transition: opacity .55s ease, transform .55s ease;
+}
+.reveal.in-view { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+```
+
+- [ ] **Step 3: Reload, verify behaviors**
+
+- Clicking nav links scroll-jumps smoothly to each section.
+- Active link highlights as you scroll.
+- On mobile (DevTools < 900px), hamburger opens the cream sheet; close button + Escape dismiss it; tapping a link navigates and closes.
+- Section content fades in as it enters viewport.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add assets/script.js assets/styles.css
+git commit -m "feat(js): smooth scroll, active nav, mobile menu, fade-in"
+```
+
+---
+
+## Task 14: Responsive + a11y polish
+
+**Files:**
+- Modify: `assets/styles.css`
+- Modify: `index.html`
+
+- [ ] **Step 1: Hero h1 size tune on very small screens**
+
+Append to `assets/styles.css`:
+
+```css
+@media (max-width: 480px) {
+  .display-xl { letter-spacing: -0.8px; }
+  .section { padding: 64px 0; }
+  .hero { padding-top: 32px; }
+  .callout { padding: 40px 24px; }
+}
+```
+
+- [ ] **Step 2: Manual a11y checks**
+
+Run through:
+- Tab through page — every interactive element is reachable in order; focus ring visible on all.
+- Skip-link appears top-left on first Tab.
+- Theme toggle announces `aria-pressed` (DevTools → Accessibility tree).
+- Screen-reader landmark navigation lands on header / main / footer.
+- All `<img>`/`<svg>` either have `alt`/`aria-label` or `aria-hidden="true"`.
+
+Fix any gap inline (e.g., add missing `aria-label`).
+
+- [ ] **Step 3: Lighthouse audit**
+
+Open DevTools → Lighthouse → Mobile, Performance + Accessibility + Best Practices + SEO. Run.
+Expected: each category ≥ 90. If A11y drops below 95, address flagged issues (contrast, missing labels).
+
+- [ ] **Step 4: Cross-browser sanity**
+
+Open in Chrome and Firefox. Verify layout parity at 360px, 768px, 1024px, 1440px widths via DevTools responsive mode.
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add assets/styles.css index.html
+git commit -m "fix(a11y,responsive): small-screen polish and accessibility pass"
+```
+
+---
+
+## Task 15: GitHub Pages publish
+
+**Files:** none new
+
+- [ ] **Step 1: Push branch**
+
+```bash
+git push origin main
+```
+
+- [ ] **Step 2: Enable Pages**
+
+In GitHub repo → Settings → Pages → Source = `Deploy from a branch`, Branch = `main`, Folder = `/ (root)`. Save.
+
+- [ ] **Step 3: Wait for deploy**
+
+GitHub Actions tab shows `pages build and deployment`. Wait ~1 minute.
+
+- [ ] **Step 4: Verify live URL**
+
+Open `https://abhishekjain1.github.io/abhishekjain1/` (or whichever path GitHub assigns). Verify:
+- Page loads, fonts apply.
+- Theme toggle persists across reloads.
+- All nav links scroll to sections.
+- Email/LinkedIn buttons work.
+- Mobile layout works on a real phone.
+
+- [ ] **Step 5: Update `<link rel="canonical">` and OG URLs if repo path differs**
+
+If the published URL is not `abhishekjain1.github.io/abhishekjain1/`, edit `index.html` to match, commit, push.
+
+```bash
+git add index.html
+git commit -m "chore(meta): update canonical and OG URLs to actual Pages path"
+git push
+```
+
+---
+
+## Self-Review Notes
+
+- Spec § 3 (sections): all 7 anchors covered (Tasks 4-11).
+- Spec § 2 (theme tokens, fonts): Task 2 + Task 3.
+- Spec § 4 (interactivity): Task 12 (theme) + Task 13 (scroll/menu/observer).
+- Spec § 5 (file layout): Task 1 creates exactly the files listed.
+- Spec § 6 (a11y): Task 14 covers manual + Lighthouse pass; skip-link in Task 4; reduced-motion in Tasks 2, 13.
+- Spec § 7 (breakpoints): grids in Tasks 6, 8, 9 hit 768/1024 cutoffs; Task 14 adds <480px polish.
+- Spec § 8 (perf): `font-display: swap`, inline SVG only, no external JS — Task 3 sets fonts, Task 14 verifies via Lighthouse.
+- Spec § 9 (SEO): Task 3 lands meta + OG + JSON-LD; Task 15 reconciles canonical URL after deploy.
+- No résumé download link anywhere (removed per latest user direction).
+- No phone number anywhere (removed per latest user direction).
+- Type/class naming consistent: `.topnav`, `.btn`, `.card`, `.tile`, `.callout`, `.timeline`, `.mockup`, `.brand`, `.skills` — each used in markup and CSS in the same form.
+
+---
+
+## Execution Handoff
+
+Plan complete and saved to `docs/superpowers/plans/2026-05-24-personal-website.md`. Two execution options:
+
+1. **Subagent-Driven (recommended)** — Fresh subagent per task, review between tasks, fast iteration.
+2. **Inline Execution** — Execute tasks in this session using executing-plans, batch with checkpoints.
+
+Which approach?
