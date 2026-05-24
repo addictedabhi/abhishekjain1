@@ -327,3 +327,53 @@ button { font: inherit; cursor: pointer; border: 0; background: transparent; col
 .callout__sub { color: var(--on-primary); opacity: .92; max-width: 56ch; }
 .callout__actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .callout .badge--coral { background: rgba(255,255,255,.18); color: var(--on-primary); }
+
+/* ----- Footer ----- */
+.footer { background: var(--surface-dark); color: var(--on-dark-soft); padding: 64px 0 32px; margin-top: 96px; }
+.brand--on-dark, .brand--on-dark .brand__mark { color: var(--on-dark); }
+.footer__grid {
+  display: grid; gap: 32px;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 700px)  { .footer__grid { grid-template-columns: 2fr 1fr 1fr 1fr; } }
+.footer__brand .body-sm { color: var(--on-dark-soft); margin-top: 12px; max-width: 36ch; }
+.footer__col { display: flex; flex-direction: column; gap: 10px; }
+.footer__col .caption-up { color: var(--on-dark); margin-bottom: 4px; }
+.footer__col a { color: var(--on-dark-soft); font-size: 14px; }
+.footer__col a:hover { color: var(--on-dark); text-decoration: underline; }
+.footer__bottom {
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  margin-top: 48px; padding-top: 24px;
+  border-top: 1px solid #2e2c28;
+}
+.footer__bottom .body-sm { color: var(--on-dark-soft); }
+
+/* ----- Mobile menu ----- */
+.mobile-menu {
+  position: fixed; inset: 0; z-index: 100;
+  background: var(--canvas);
+}
+.mobile-menu[hidden] { display: none; }
+.mobile-menu__panel {
+  height: 100%; display: flex; flex-direction: column;
+  padding: 24px 24px 32px; gap: 24px;
+}
+.mobile-menu__close {
+  align-self: flex-end;
+  width: 44px; height: 44px; border-radius: 50%;
+  color: var(--ink); border: 1px solid var(--hairline);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.mobile-menu nav {
+  display: flex; flex-direction: column; gap: 8px;
+  margin-top: 16px;
+}
+.mobile-menu nav a {
+  font-family: 'EB Garamond', serif;
+  font-size: 28px; color: var(--ink);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--hairline-soft);
+}
+.mobile-menu nav a:hover { text-decoration: none; color: var(--primary); }
+.mobile-menu__cta { align-self: flex-start; }
+body.menu-open { overflow: hidden; }
