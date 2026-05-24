@@ -21,16 +21,7 @@
       try { localStorage.setItem('theme', next); } catch (e) {}
     });
   }
-  if (window.matchMedia) {
-    const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    if (mq.addEventListener) {
-      mq.addEventListener('change', function (e) {
-        let stored = null;
-        try { stored = localStorage.getItem('theme'); } catch (err) {}
-        if (!stored) applyTheme(e.matches ? 'dark' : 'light');
-      });
-    }
-  }
+  // Default theme is dark; do not auto-flip on OS color-scheme change.
 
   /* ----- Mobile menu (defined BEFORE smooth-scroll so closeMenu is in scope) ----- */
   const menuOpenBtn = document.querySelector('.menu-toggle');

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -42,10 +42,9 @@
     (function () {
       try {
         var stored = localStorage.getItem('theme');
-        var prefers = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', stored || prefers);
+        document.documentElement.setAttribute('data-theme', stored || 'dark');
       } catch (e) {
-        document.documentElement.setAttribute('data-theme', 'light');
+        document.documentElement.setAttribute('data-theme', 'dark');
       }
     })();
   </script>
