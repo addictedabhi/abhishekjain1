@@ -93,10 +93,22 @@ Single `index.html`. Sections anchored by ID. Navigation + inline links scroll-j
 - Education footer block: B.Tech, Communication & Computer Engineering — LNMIIT, Jaipur (2009).
 
 ### 3.5 Global Footprint (`#clients`)
-- Section heading display-lg: "Global client footprint."
-- 6 `connector-tile` cards, 6-up desktop, 3-up tablet, 2-up mobile.
-- Tiles: STC (Saudi Arabia) · Reliance Jio (India) · NTT (Japan) · América Móvil (LATAM) · Daimler (Germany) · General Motors (USA).
-- Each tile: title-sm client name, caption-uppercase region, hairline border.
+- Section heading display-lg: "Platforms shipped for global operators."
+- 11 `connector-tile` cards. Grid: 2-up mobile, 3-up tablet (≥700px), 4-up desktop (≥1024px), 6-up wide (≥1280px).
+- Tiles (in order):
+  1. **STC** — Saudi Arabia
+  2. **Reliance Jio** — India
+  3. **NTT** — Japan
+  4. **América Móvil** — LATAM
+  5. **Daimler** — Germany
+  6. **General Motors** — USA
+  7. **Etisalat** — UAE
+  8. **Maxis** — Malaysia
+  9. **Google** — India
+  10. **Eicher Motors** — India
+  11. **Volvo Trucks** — India
+- Each tile: 44×44 rounded brand monogram badge (text-based, brand-color background) + title-sm client name + caption-uppercase region. Hairline border.
+- Brand monograms are text-based to avoid trademark concerns — one CSS modifier class per brand (`.tile__logo--<slug>`). Google is the only exception with a gradient-clipped multicolor "G".
 
 ### 3.6 Skills (`#skills`)
 - Section heading display-lg: "Tech stack."

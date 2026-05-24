@@ -23,7 +23,9 @@
 | Quality fixes | ✅ Done | `4fdaa22` | Skip link → `#main`, JS rewrapped in single IIFE w/ focus trap, hex values tokenized, JSON-LD email cleaned, footer breakpoint normalized |
 | README | ✅ Done | `2fbc57f` | — |
 | SEO pack | ✅ Done | `b77d034` | Title/desc/keywords, OG, Twitter, 3 JSON-LD blocks (Person/WebSite/BreadcrumbList), `robots.txt`, `sitemap.xml` |
-| CLAUDE.md | ✅ Done | (pending commit) | — |
+| CLAUDE.md | ✅ Done | `0841aba`, `66ed616` | Initial + monogram/favicon addendum |
+| Client tiles expanded (6 → 11) | ✅ Done | `0164724` | Added Etisalat, Maxis, Google, Eicher, Volvo Trucks; brand monogram system |
+| Favicon "AJ" monogram | ✅ Done | `9913718` | Replaced spike-mark favicon with serif "AJ" on coral |
 | Task 14 (Lighthouse) | ⏳ User-driven | — | Requires browser/DevTools |
 | Task 15 (Pages publish) | ⏳ User-driven | — | Requires GitHub UI |
 | Task 16 (OG cover image) | ⏳ Open | — | `assets/og-cover.png` referenced in meta but not yet generated |
@@ -65,17 +67,20 @@ Empty file (presence alone disables Jekyll on Pages).
 ```
 ```
 
-- [ ] **Step 2: Create `assets/favicon.svg` with the spike-mark glyph**
+- [ ] **Step 2: Create `assets/favicon.svg`**
+
+> **Updated 2026-05-24 (`9913718`):** Initial favicon was the spike-mark glyph; current favicon is an "AJ" serif monogram on coral. The spike-mark survives only as the inline nav/footer brand glyph.
 
 ```svg
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="6" fill="#faf9f5"/>
-  <g stroke="#141413" stroke-width="2.5" stroke-linecap="round">
-    <line x1="16" y1="6" x2="16" y2="26"/>
-    <line x1="6" y1="16" x2="26" y2="16"/>
-    <line x1="9" y1="9" x2="23" y2="23"/>
-    <line x1="23" y1="9" x2="9" y2="23"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#cc785c"/>
+  <text x="32" y="44"
+        text-anchor="middle"
+        font-family="Georgia, 'EB Garamond', 'Tiempos Headline', serif"
+        font-size="34"
+        font-weight="600"
+        fill="#faf9f5"
+        letter-spacing="-1.5">AJ</text>
 </svg>
 ```
 
@@ -816,11 +821,13 @@ git commit -m "feat(experience): add career timeline and education block"
 
 ## Task 8: Global client footprint (`#clients`)
 
+> **Updated 2026-05-24:** Initial implementation shipped 6 tiles. Subsequent commit `0164724` expanded to 11 tiles and introduced text-based brand monograms with per-brand CSS modifier classes (no inline styles, no real corporate logos). Grid breakpoints retuned for 11 tiles.
+
 **Files:**
 - Modify: `index.html`
 - Modify: `assets/styles.css`
 
-- [ ] **Step 1: Append clients section**
+- [ ] **Step 1: Append clients section (11 tiles with monogram badges)**
 
 ```html
 <section id="clients" class="section" aria-labelledby="clients-title">
@@ -831,18 +838,23 @@ git commit -m "feat(experience): add career timeline and education block"
     </header>
 
     <ul class="tiles">
-      <li class="tile"><span class="title-sm">STC</span><span class="caption-up">Saudi Arabia</span></li>
-      <li class="tile"><span class="title-sm">Reliance Jio</span><span class="caption-up">India</span></li>
-      <li class="tile"><span class="title-sm">NTT</span><span class="caption-up">Japan</span></li>
-      <li class="tile"><span class="title-sm">América Móvil</span><span class="caption-up">LATAM</span></li>
-      <li class="tile"><span class="title-sm">Daimler</span><span class="caption-up">Germany</span></li>
-      <li class="tile"><span class="title-sm">General Motors</span><span class="caption-up">USA</span></li>
+      <li class="tile"><span class="tile__logo tile__logo--stc" aria-hidden="true">STC</span><span class="title-sm">STC</span><span class="caption-up">Saudi Arabia</span></li>
+      <li class="tile"><span class="tile__logo tile__logo--jio" aria-hidden="true">Jio</span><span class="title-sm">Reliance Jio</span><span class="caption-up">India</span></li>
+      <li class="tile"><span class="tile__logo tile__logo--ntt" aria-hidden="true">NTT</span><span class="title-sm">NTT</span><span class="caption-up">Japan</span></li>
+      <li class="tile"><span class="tile__logo tile__logo--ammov" aria-hidden="true">AM</span><span class="title-sm">América Móvil</span><span class="caption-up">LATAM</span></li>
+      <li class="tile"><span class="tile__logo tile__logo--daimler" aria-hidden="true">D</span><span class="title-sm">Daimler</span><span class="caption-up">Germany</span></li>
+      <li class="tile"><span class="tile__logo tile__logo--gm" aria-hidden="true">GM</span><span class="title-sm">General Motors</span><span class="caption-up">USA</span></li>
+      <li class="tile"><span class="tile__logo tile__logo--etisalat" aria-hidden="true">e&amp;</span><span class="title-sm">Etisalat</span><span class="caption-up">UAE</span></li>
+      <li class="tile"><span class="tile__logo tile__logo--maxis" aria-hidden="true">M</span><span class="title-sm">Maxis</span><span class="caption-up">Malaysia</span></li>
+      <li class="tile"><span class="tile__logo tile__logo--google" aria-hidden="true">G</span><span class="title-sm">Google</span><span class="caption-up">India</span></li>
+      <li class="tile"><span class="tile__logo tile__logo--eicher" aria-hidden="true">E</span><span class="title-sm">Eicher Motors</span><span class="caption-up">India</span></li>
+      <li class="tile"><span class="tile__logo tile__logo--volvo" aria-hidden="true">V</span><span class="title-sm">Volvo Trucks</span><span class="caption-up">India</span></li>
     </ul>
   </div>
 </section>
 ```
 
-- [ ] **Step 2: Append tile styles**
+- [ ] **Step 2: Append tile styles + per-brand monogram classes**
 
 ```css
 .tiles {
@@ -851,27 +863,59 @@ git commit -m "feat(experience): add career timeline and education block"
   grid-template-columns: repeat(2, 1fr);
 }
 @media (min-width: 700px)  { .tiles { grid-template-columns: repeat(3, 1fr); } }
-@media (min-width: 1024px) { .tiles { grid-template-columns: repeat(6, 1fr); } }
+@media (min-width: 1024px) { .tiles { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 1280px) { .tiles { grid-template-columns: repeat(6, 1fr); } }
 .tile {
-  display: flex; flex-direction: column; gap: 6px;
+  display: flex; flex-direction: column; gap: 10px;
   padding: 20px; border-radius: 12px;
   background: var(--canvas); border: 1px solid var(--hairline);
   color: var(--ink);
-  min-height: 96px; justify-content: space-between;
+  min-height: 128px; justify-content: space-between;
 }
 .tile .caption-up { color: var(--muted); }
+.tile__logo {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 10px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700; font-size: 14px; line-height: 1;
+  letter-spacing: -0.3px;
+  flex-shrink: 0; user-select: none;
+}
+.tile__logo--stc      { background: #4F2D7F; color: #ffffff; }
+.tile__logo--jio      { background: #0F3CC9; color: #ffffff; }
+.tile__logo--ntt      { background: #0066B3; color: #ffffff; }
+.tile__logo--ammov    { background: #FFCB05; color: #141413; }
+.tile__logo--daimler  { background: #1F1F1F; color: #ffffff; }
+.tile__logo--gm       { background: #005DAA; color: #ffffff; }
+.tile__logo--etisalat { background: #62A744; color: #ffffff; }
+.tile__logo--maxis    { background: #0B5BAA; color: #ffffff; }
+.tile__logo--eicher   { background: #E2231A; color: #ffffff; }
+.tile__logo--volvo    { background: #1A57A5; color: #ffffff; }
+.tile__logo--google {
+  background: #ffffff; border: 1px solid var(--hairline);
+  background-image: linear-gradient(135deg,
+    #4285F4 0 25%, #EA4335 25% 50%, #FBBC05 50% 75%, #34A853 75% 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  font-size: 22px;
+}
 ```
 
 - [ ] **Step 3: Reload, verify**
 
-Six client tiles render in 6-up (desktop), 3-up (tablet), 2-up (mobile).
+11 client tiles render in 6-up (≥1280px), 4-up (1024–1279), 3-up (700–1023), 2-up (<700). Brand monograms render with brand color backgrounds; Google uses gradient-clipped "G".
 
 - [ ] **Step 4: Commit**
 
 ```bash
 git add index.html assets/styles.css
-git commit -m "feat(clients): add global client footprint tiles"
+git commit -m "feat(clients): add global client footprint with brand monograms"
 ```
+
+### Adding a new client later
+1. Append `<li class="tile">…</li>` block in `index.html`.
+2. Add matching `.tile__logo--<slug> { background: …; color: …; }` rule in `styles.css`.
+3. Keep monogram text-based (initials or short brand-mark text). No real corporate logos unless explicitly approved (trademark concern).
 
 ---
 
