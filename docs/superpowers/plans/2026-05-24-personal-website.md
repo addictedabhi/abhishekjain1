@@ -32,6 +32,8 @@
 | Clients heading copy | ✅ Done | `05921cc` | "Platforms shipped globally to MNOs and OEMs." |
 | Skills trim (IoT + Go) | ✅ Done | `6e0aa22` | Already logged above; included for chronology |
 | Resources page added | ✅ Done | `7c5e025`, `8a9f54c`, `efa6b88` | New page + first PDF — full breakdown in `2026-05-24-resources-page.md` |
+| Hero title — Title Case + SVP jobTitle | ✅ Done | `c77c55c` | h1 capitalized; JSON-LD jobTitle aligned to "SVP Engineering" |
+| Default theme → light | ✅ Done | (pending commit) | Reverted from dark; `data-theme="light"` and pre-paint fallback = light |
 | Task 14 (Lighthouse) | ⏳ User-driven | — | Requires browser/DevTools |
 | Task 15 (Pages publish) | ⏳ User-driven | — | Requires GitHub UI |
 | Task 16 (OG cover image) | ⏳ Open | — | `assets/og-cover.png` referenced in meta but not yet generated |

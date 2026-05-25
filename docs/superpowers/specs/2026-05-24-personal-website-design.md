@@ -39,7 +39,7 @@ Coral primary unchanged across themes (brand voltage).
 ### Theme switching
 
 - `<html data-theme="light|dark">` attribute, CSS variables swap.
-- **Default theme: dark.** First load: read `localStorage.theme` if set, else apply `dark`. `prefers-color-scheme` is NOT consulted (intentional — keeps the brand's dark surface as the entry experience).
+- **Default theme: light.** First load: read `localStorage.theme` if set, else apply `light`. `prefers-color-scheme` is NOT consulted (intentional — keeps cream canvas as the entry experience, matching DESIGN.md base atmosphere).
 - Toggle button in top nav (sun/moon SVG icon). User choice persists in `localStorage`.
 - No OS-level theme-change listener — once a user toggles, that choice is sticky across reloads regardless of OS theme.
 - Update is instant; no transition flash (set `data-theme` inline pre-CSS via tiny inline script in `<head>`).

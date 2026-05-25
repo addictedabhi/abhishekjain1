@@ -33,7 +33,7 @@ No test framework, no linter, no bundler — by design. Verification is manual: 
 
 ### Theme switching
 
-`<html data-theme="light|dark">` controls everything via CSS custom properties. Two token blocks in `styles.css`: `:root, [data-theme="light"]` and `[data-theme="dark"]`. Coral primary (`--primary: #cc785c`) is identical across themes — that is intentional (brand voltage). **Default is dark.** The pre-paint inline `<script>` in `<head>` runs BEFORE `styles.css` loads to prevent FOUC: reads `localStorage.theme` if set, otherwise applies `dark`. The OS-level `prefers-color-scheme` change listener was intentionally removed — user's toggle choice is sticky and the site no longer reacts to OS theme flips. The initial `<html data-theme="dark">` attribute matches the pre-paint default so SSR/no-JS visitors still get the dark surface.
+`<html data-theme="light|dark">` controls everything via CSS custom properties. Two token blocks in `styles.css`: `:root, [data-theme="light"]` and `[data-theme="dark"]`. Coral primary (`--primary: #cc785c`) is identical across themes — that is intentional (brand voltage). **Default is light.** The pre-paint inline `<script>` in `<head>` runs BEFORE `styles.css` loads to prevent FOUC: reads `localStorage.theme` if set, otherwise applies `light`. The OS-level `prefers-color-scheme` change listener was intentionally removed — user's toggle choice is sticky and the site no longer reacts to OS theme flips. The initial `<html data-theme="light">` attribute matches the pre-paint default so SSR/no-JS visitors still get the cream surface.
 
 ### Active-nav highlight
 
